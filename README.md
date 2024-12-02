@@ -1,31 +1,51 @@
-# Chord DHT Replication with Visualization
+
+---
+
+# Chord DHT Simulation with GUI
 
 ## Overview
-This project implements a **Chord Distributed Hash Table (DHT)**, a scalable and robust peer-to-peer lookup protocol. It includes a graphical user interface (GUI) for easy interaction and visualization of the DHT ring structure, allowing users to simulate node addition, removal, key-value storage, retrieval, and replication.
 
-The implementation supports:
-- **Node Joins/Leaves** with consistent hashing.
-- **Replication** for reliability.
-- **Key-Value Storage and Retrieval** using hash-based lookup.
-- **Finger Table Visualization** for efficient lookup paths.
+This project implements a **Chord Distributed Hash Table (DHT)** protocol along with a Graphical User Interface (GUI) for simulation and visualization. It enables users to interact with the DHT by adding/removing nodes, storing and retrieving key-value pairs, and visualizing the dynamic structure of the DHT ring.
+
+The Chord DHT protocol provides a scalable and efficient peer-to-peer network structure using **consistent hashing** and **finger tables** for quick lookups. The GUI further enhances usability by presenting the DHT ring structure and operations in a visual and interactive manner.
+
+---
 
 ## Features
+
+### Core Features
 - **Chord Protocol Implementation**:
-  - Node stabilization, finger table setup, and successor/predecessor updates.
-  - Robust and fault-tolerant structure using replication.
-- **Replication Factor**: Configurable for fault tolerance.
+  - Consistent hashing for distributed key management.
+  - Efficient lookup with \(O(\log N)\) complexity using finger tables.
+  - Dynamic node addition and removal.
+  - Replication for fault tolerance.
+
 - **Interactive GUI**:
-  - Visualize the Chord ring and finger table connections.
-  - Add/remove nodes and perform operations on the DHT.
+  - Add or remove nodes in the ring.
+  - Store and retrieve key-value pairs.
+  - Query nodes for successor and predecessor.
+  - Real-time visualization of the DHT structure.
+
 - **Visualization**:
-  - Graphical representation of nodes and their connections.
-  - Custom edge styles to differentiate between successor links and finger tables.
+  - Circular DHT ring with nodes and edges.
+  - **Blue edges**: Successor links.
+  - **Red dashed edges**: Finger table connections.
+
+### Additional Features
+- **Logging**:
+  - Detailed logs for node operations, key storage, replication, and retrieval.
+  - Logs are displayed in the terminal for debugging.
+
+---
 
 ## Screenshots
-| Feature       | Description |
-|---------------|-------------|
-| ![Ring](#)    | **Chord Ring Visualization**: Nodes and connections between them. |
-| ![GUI](#)     | **Interactive GUI**: Controls for adding/removing nodes, storing, and retrieving keys. |
+
+| Feature                        | Description                                                  |
+|--------------------------------|--------------------------------------------------------------|
+| ![Chord Ring](screenshots/chord.png "Visualization of the Chord DHT Ring") | **Chord Ring Visualization**: Nodes and connections between them. |
+| ![GUI Interface](screenshots/GUI.png "Graphical User Interface for Chord DHT") | **Interactive GUI**: Controls for adding/removing nodes, storing, and retrieving keys. |
+| ![Logging Output](screenshots/logging.png "Logging output during Chord DHT operations") | **Logging Output**: Detailed logs of operations in the terminal. |
+---
 
 ## Installation
 
@@ -35,6 +55,7 @@ The implementation supports:
   - `matplotlib`
   - `networkx`
   - `tkinter`
+  - `numpy`
 
 ### Installation Steps
 1. Clone the repository:
@@ -48,80 +69,112 @@ The implementation supports:
    pip install -r requirements.txt
    ```
 
-   *(If `requirements.txt` is not available, manually install: `matplotlib`, `networkx`, `numpy`.)*
+   *(If `requirements.txt` is unavailable, manually install required libraries)*:
+   ```bash
+   pip install matplotlib networkx numpy
+   ```
 
 3. Run the application:
    ```bash
    python chord_dht_gui_fixed.py
    ```
 
+---
+
 ## Usage
 
 ### GUI Controls
 - **Add Node**:
-  - Add a node to the DHT by entering an optional ID or letting the system generate one.
+  - Enter an optional node ID or let the system assign one automatically.
 - **Remove Node**:
-  - Remove a specific node by entering its ID.
+  - Remove a node by entering its ID.
 - **Store Key-Value**:
-  - Store a key-value pair in the DHT. The key is hashed to determine its location.
+  - Store a key-value pair in the DHT.
 - **Retrieve Key**:
-  - Retrieve the value associated with a key.
+  - Retrieve a value associated with a key from the DHT.
 - **Query Node**:
-  - Display a node's successor and predecessor in the DHT.
+  - Find the successor and predecessor of a specific node.
 
 ### Visualization
 - Nodes are displayed in a circular layout.
-- **Blue Edges**: Successor links.
-- **Red Dashed Edges**: Finger table connections.
+- **Blue Edges**: Represent successor relationships.
+- **Red Dashed Edges**: Represent finger table connections.
+
+---
+
+## File Structure
+
+```plaintext
+Chord_DHT-Replication/
+├── chord_dht_gui_fixed.py      # Main application with GUI
+├── README.md                   # Documentation
+├── requirements.txt            # Dependencies
+├── screenshots/                # Images for README
+│   ├── chord.png
+│   ├── GUI.png
+│   └── logging.png
+└── assets/                     # Additional resources
+```
+
+---
 
 ## Key Concepts
 
 ### Chord Protocol
+The Chord protocol enables scalable and efficient peer-to-peer communication:
 - **Consistent Hashing**:
-  - Nodes and keys are mapped to an identifier space (0 to \(2^M - 1\)).
-- **Finger Table**:
-  - Provides shortcuts for faster lookups in \(O(\log N)\) time.
+  - Nodes and keys are hashed to a fixed-size identifier space (e.g., \(0\) to \(2^M - 1\)).
+- **Finger Tables**:
+  - Each node maintains a routing table for efficient key lookups.
+- **Successors and Predecessors**:
+  - Ensure the ring structure remains intact during node joins and leaves.
 - **Replication**:
-  - Ensures fault tolerance by storing data on multiple nodes.
+  - Increases fault tolerance by duplicating data across multiple nodes.
 
 ### Replication Factor
-The replication factor \(R\) is configurable. A higher \(R\) increases fault tolerance but consumes more storage.
+The replication factor `R` determines how many nodes store a copy of a key-value pair. It is configurable for increased fault tolerance.
 
-### GUI Components
-1. **Control Panel**:
-   - Buttons and text fields for interaction.
-2. **Visualization**:
-   - Dynamic graph showing the Chord ring and connections.
-
-## File Structure
-```
-Chord_DHT-Replication/
-├── chord_dht_gui_fixed.py      # Main application with GUI
-├── README.md                   # Project documentation
-├── requirements.txt            # Dependencies
-└── assets/                     # Images or other resources
-```
+---
 
 ## Customization
+
 ### Modify Ring Size
-The identifier space can be adjusted by changing `M`:
+Change the identifier space size by updating the `M` constant in the code:
 ```python
-M = 5  # Number of bits (0-31 range)
+M = 5  # Number of bits (identifier range: 0 to 31)
 ```
 
-### Replication Factor
-Update the replication factor for fault tolerance:
+### Configure Replication
+Adjust the replication factor by modifying the `R` constant:
 ```python
 R = 3  # Replication factor
 ```
 
-### Logging
-Enable or adjust logging levels:
+### Logging Configuration
+Enable file logging and customize log levels by modifying the logging setup:
 ```python
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s:%(message)s',
+    handlers=[
+        logging.FileHandler("chord_dht.log"),  # Save logs to a file
+        logging.StreamHandler(sys.stdout)     # Print logs to console
+    ]
+)
 ```
 
+---
+
+## Future Enhancements
+- Implement a **web-based interface** for remote access.
+- Extend visualization to show **data replication** and storage distribution.
+- Introduce failure recovery mechanisms for nodes.
+
+---
+
 ## Contributing
+
+### Steps to Contribute
 1. Fork the repository.
 2. Create a feature branch:
    ```bash
@@ -131,14 +184,35 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(mess
    ```bash
    git commit -m "Description of changes"
    ```
-4. Push to the branch:
+4. Push your changes:
    ```bash
    git push origin feature-name
    ```
 5. Open a pull request.
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+---
+
+
 
 ## Acknowledgments
-This project was inspired by the [Chord DHT protocol](https://pdos.csail.mit.edu/papers/chord:sigcomm01/chord_sigcomm.pdf) and aims to provide an educational tool for understanding its core principles.
+This implementation is inspired by the [Chord DHT protocol paper](https://pdos.csail.mit.edu/papers/chord:sigcomm01/chord_sigcomm.pdf) and aims to provide an educational tool for understanding its principles.
+
+---
+
+### Instructions to Push Changes
+
+1. Add all files and updated README to Git:
+   ```bash
+   git add .
+   ```
+
+2. Commit changes with a descriptive message:
+   ```bash
+   git commit -m "Updated README with screenshots and features"
+   ```
+
+3. Push to the `main` branch:
+   ```bash
+   git push origin main
+   ```
+
